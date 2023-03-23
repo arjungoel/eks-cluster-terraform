@@ -43,7 +43,7 @@ jobs:
       env:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform validate -var="aws_access_key=$AWS_ACCESS_KEY" -var="aws_secret_access_key=$AWS_SECRET_ACCESS_KEY"
+      run: terraform validate
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
