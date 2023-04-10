@@ -1,4 +1,4 @@
-aws_region            = "us-east-1"
+aws_region = "us-east-1"
 default_tags = {
   primary_owner   = "Arjun Goel"
   secondary_owner = "Harsh Goel"

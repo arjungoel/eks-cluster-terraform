@@ -1,7 +1,10 @@
 resource "aws_launch_template" "eks_launch_template" {
   name          = var.launch_template_name
   instance_type = "t3.large"
-  image_id      = data.aws_ssm_parameter.cluster.value
+  metadata_options {
+    http_tokens = "required"
+  }
+  image_id = data.aws_ssm_parameter.cluster.value
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
