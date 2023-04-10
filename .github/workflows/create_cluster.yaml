@@ -41,6 +41,10 @@ jobs:
         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: terraform validate
+    
+    # TFSec to find security loopholes
+    - name: tfsec
+      uses: aquasecurity/tfsec-action@v1.0.0
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
