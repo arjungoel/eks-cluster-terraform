@@ -1,0 +1,71 @@
+name: 'Create Amazon EKS cluster using GitHub Actions'
+
+on:
+  push:
+    branches: ["feature"] 
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  terraform:
+    name: 'EKS Cluster deployment using GitHub Actions'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: Terraform Format
+      shell: bash
+      run: terraform fmt
+
+    # validate the terraform code
+    - name: Terraform validation
+      shell: bash
+      env:
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform validate
+    
+    # TFSec to find security loopholes
+    - name: tfsec
+      uses: aquasecurity/tfsec-action@v1.0.0
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      shell:  bash
+      env:
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform plan -var="aws_access_key=$AWS_ACCESS_KEY" -var="aws_secret_access_key=$AWS_SECRET_ACCESS_KEY"
+
+    # Terraform Apply to create the resources      
+    - name: Terraform Apply
+      shell: bash
+      env:
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform apply -auto-approve -input=false -var="aws_access_key=$AWS_ACCESS_KEY" -var="aws_secret_access_key=$AWS_SECRET_ACCESS_KEY"
+    
+    # Delete the resources after testing if not required
+    - name: Terraform Destroy
+      shell: bash
+      env:
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform destroy -auto-approve -var="aws_access_key=$AWS_ACCESS_KEY" -var="aws_secret_access_key=$AWS_SECRET_ACCESS_KEY"  

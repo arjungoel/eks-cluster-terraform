@@ -24,7 +24,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id                          = aws_vpc.main.id
   cidr_block                      = cidrsubnet(aws_vpc.main.cidr_block, 4, count.index)
   ipv6_cidr_block                 = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, count.index)
-  map_public_ip_on_launch         = true
+  map_public_ip_on_launch         = false
   assign_ipv6_address_on_creation = true
   tags = {
     Name = "${var.default_tags.project_name}-public-${element(data.aws_availability_zones.available.names, count.index)}"

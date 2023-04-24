@@ -5,7 +5,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   vpc_config {
     subnet_ids              = [aws_subnet.private_subnet[1].id, aws_subnet.public_subnet[0].id]
     endpoint_private_access = true
-    endpoint_public_access  = true
+    endpoint_public_access  = false
   }
 
   version = "1.25"
@@ -19,6 +19,10 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  tags = {
+    cost_centre = "engineering"
+  }
 
 }
 

@@ -1,0 +1,18 @@
+---
+checks:
+- code: tag-cluster
+  description: Custom check to ensure the cost_centre tag is applied to EKS cluster
+  impact: By not having CostCentre we can't keep track of billing
+  resolution: Add the CostCentre tag
+  requiredTypes:
+  - resource
+  requiredLabels:
+  - aws_eks_cluster
+  severity: ERROR
+  matchSpec:
+    name: tags
+    action: contains
+    value: cost_centre
+  errorMessage: The required cost_centre tag was missing
+  relatedLinks:
+  - http://internal.acmecorp.com/standards/aws/tagging.html
