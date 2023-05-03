@@ -2,7 +2,7 @@ aws_region            = "us-east-1"
 default_tags = {
   primary_owner   = "Arjun Goel"
   secondary_owner = "Harsh Goel"
-  project_name    = "EKS-POC-PROJECT"
+  project_name    = "EKS-CLUSTER-TERRAFORM"
 }
 cidr_block           = "192.168.0.0/16"
 public_subnet_count  = 2
